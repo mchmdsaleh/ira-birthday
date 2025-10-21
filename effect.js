@@ -4,6 +4,31 @@ $(window).load(function(){
 });
 $('document').ready(function(){
 		var vw;
+		var polaroidIndex = 0;
+		var polaroidPhotos = [
+			{src: 'polaroid1.jpg', caption: 'Birthday Joy'},
+			{src: 'polaroid2.jpg', caption: 'Sweet Memories'},
+			{src: 'polaroid3.jpg', caption: 'Captured Smiles'},
+			{src: 'polaroid4.jpg', caption: 'Golden Lights'},
+			{src: 'polaroid5.jpg', caption: 'Party Vibes'},
+			{src: 'polaroid6.jpg', caption: 'Best Friends'}
+		];
+
+		function renderPolaroids() {
+			var left = polaroidPhotos[polaroidIndex % polaroidPhotos.length];
+			var right = polaroidPhotos[(polaroidIndex + 1) % polaroidPhotos.length];
+			$('#polaroid_left_img').attr('src', left.src).attr('alt', left.caption);
+			$('#polaroid_left_caption').text(left.caption);
+			$('#polaroid_right_img').attr('src', right.src).attr('alt', right.caption);
+			$('#polaroid_right_caption').text(right.caption);
+		}
+
+		function advancePolaroids() {
+			polaroidIndex = (polaroidIndex + 2) % polaroidPhotos.length;
+			renderPolaroids();
+		}
+
+		renderPolaroids();
 		$(window).resize(function(){
 			 vw = $(window).width()/2;
 			$('#b1,#b2,#b3,#b4,#b5,#b6,#b7').stop();
@@ -45,7 +70,11 @@ $('document').ready(function(){
 	});
 
 	$('#bannar_coming').click(function(){
+		polaroidIndex = 0;
+		renderPolaroids();
 		$('.bannar').addClass('bannar-come');
+		$('#polaroid_gallery').fadeIn('slow');
+		$('#inline_cake').hide();
 		$(this).fadeOut('slow').delay(6000).promise().done(function(){
 			$('#balloons_flying').fadeIn('slow');
 		});
@@ -103,6 +132,7 @@ $('document').ready(function(){
 	}
 
 	$('#balloons_flying').click(function(){
+		advancePolaroids();
 		$('.balloon-border').animate({top:-500},8000);
 		$('#b1,#b4,#b5,#b7').addClass('balloons-rotate-behaviour-one');
 		$('#b2,#b3,#b6').addClass('balloons-rotate-behaviour-two');
@@ -125,6 +155,8 @@ $('document').ready(function(){
 	});	
 
 	$('#cake_fadein').click(function(){
+		$('#inline_cake').fadeIn('slow');
+		advancePolaroids();
 		$('.cake').fadeIn('slow');
 		$(this).fadeOut('slow').delay(3000).promise().done(function(){
 			$('#light_candle').fadeIn('slow');
@@ -132,6 +164,7 @@ $('document').ready(function(){
 	});
 
 	$('#light_candle').click(function(){
+		advancePolaroids();
 		$('.fuego').fadeIn('slow');
 		$(this).fadeOut('slow').promise().done(function(){
 			$('#wish_message').fadeIn('slow');
@@ -140,6 +173,7 @@ $('document').ready(function(){
 
 		
 	$('#wish_message').click(function(){
+		advancePolaroids();
 		 vw = $(window).width()/2;
 
 		$('#b1,#b2,#b3,#b4,#b5,#b6,#b7').stop();
@@ -165,6 +199,7 @@ $('document').ready(function(){
 	});
 	
 	$('#story').click(function(){
+		advancePolaroids();
 		$(this).fadeOut('slow');
 		$('.cake').fadeOut('fast').promise().done(function(){
 			$('.message').fadeIn('slow');
