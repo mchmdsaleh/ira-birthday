@@ -10,6 +10,8 @@ body {
 }
 .container {
 	display: none;
+	position: relative;
+	z-index: 4;
 }
 .peach {
 	background-color: #FFDAB9;
@@ -1249,80 +1251,59 @@ audio {
 	}
 }
 
-/* Polaroid gallery */
-#polaroid_gallery {
-	display: none;
-	margin-top: clamp(20px, 4vh, 30px);
+/* Polaroid background stack */
+#polaroid_background {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 3;
+	transition: opacity 0.6s ease;
 }
-.polaroid-wrapper {
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-	gap: clamp(40px, 10vw, 200px);
-	padding: 0 clamp(16px, 6vw, 120px);
-	max-width: 100vw;
-	box-sizing: border-box;
+#polaroid_background.is-active {
+	opacity: 1;
 }
-.polaroid-column {
-	display: flex;
-	flex-direction: column;
-	gap: clamp(14px, 3vh, 24px);
-	flex: 0 1 clamp(150px, 20vw, 240px);
-	align-items: center;
-}
-.polaroid-column--left {
-	align-items: flex-start;
-}
-.polaroid-column--right {
-	align-items: flex-end;
-}
-.polaroid-item {
-	width: 100%;
-}
-.polaroid-gallery-cake {
-	flex: 0 0 clamp(120px, 15vw, 160px);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-.polaroid-gallery-cake img {
-	width: 100%;
-	height: auto;
-}
-.polaroid {
+#polaroid_background .polaroid {
+	position: absolute;
+	width: clamp(130px, 20vw, 220px);
+	padding: clamp(10px, 1.5vw, 14px) clamp(10px, 1.5vw, 16px) clamp(26px, 3.2vh, 30px);
 	background: #fff;
-	padding: clamp(6px, 1.2vw, 12px) clamp(6px, 1.2vw, 12px) clamp(18px, 2.5vh, 26px);
-	box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	box-shadow: 0 24px 42px rgba(0, 0, 0, 0.24);
+	border-radius: 6px;
+	opacity: 0;
+	transform: translateY(20px) rotate(var(--rotation, -6deg));
+	transition: opacity 0.6s ease, transform 0.6s ease;
+	pointer-events: none;
 }
-.polaroid img {
+#polaroid_background .polaroid.is-visible {
+	opacity: 0.9;
+	transform: translateY(0) rotate(var(--rotation, -6deg));
+}
+#polaroid_background .polaroid img {
 	display: block;
 	width: 100%;
 	height: auto;
-	max-height: clamp(100px, 16vh, 150px);
 	filter: grayscale(100%);
-	transition: filter 0.3s ease;
+	border-radius: 4px;
+	transition: filter 0.6s ease;
 }
-.polaroid .caption {
-	margin-top: clamp(8px, 1.2vh, 14px);
+#polaroid_background .polaroid.is-visible img {
+	filter: grayscale(0%);
+}
+#polaroid_background .polaroid .caption {
+	margin-top: clamp(12px, 1.6vh, 16px);
 	text-align: center;
 	font-family: 'Signika', sans-serif;
-	font-size: clamp(12px, 1.6vw, 15px);
+	font-size: clamp(12px, 1.8vw, 16px);
 	color: #466baf;
 	text-transform: uppercase;
+	letter-spacing: 0.08em;
 }
-.polaroid-column--left .polaroid-item .polaroid {
-	transform: rotate(-3deg);
+#polaroid_background .polaroid.polaroid--left {
+	left: var(--offset-x, 4vw);
 }
-.polaroid-column--right .polaroid-item .polaroid {
-	transform: rotate(3deg);
-}
-.polaroid:hover {
-	transform: translateY(-10px) rotate(0deg);
-	box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25);
-}
-.polaroid:hover img {
-	filter: grayscale(0%);
+#polaroid_background .polaroid.polaroid--right {
+	right: var(--offset-x, 4vw);
 }
 
 .balloon-border{

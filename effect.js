@@ -5,6 +5,10 @@ $(window).load(function(){
 $('document').ready(function(){
 		var vw;
 		var polaroidIndex = 0;
+		var leftPolaroidCount = 0;
+		var rightPolaroidCount = 0;
+		var polaroidContainer = $('#polaroid_background');
+		var polaroidIntroTimeout = null;
 		var polaroidPhotos = [
 			{src: 'polaroid1.jpg', caption: 'Birthday Joy'},
 			{src: 'polaroid2.jpg', caption: 'Sweet Memories'},
@@ -14,21 +18,91 @@ $('document').ready(function(){
 			{src: 'polaroid6.jpg', caption: 'Best Friends'}
 		];
 
-		function renderPolaroids() {
-			var left = polaroidPhotos[polaroidIndex % polaroidPhotos.length];
-			var right = polaroidPhotos[(polaroidIndex + 1) % polaroidPhotos.length];
-			$('#polaroid_left_img').attr('src', left.src).attr('alt', left.caption);
-			$('#polaroid_left_caption').text(left.caption);
-			$('#polaroid_right_img').attr('src', right.src).attr('alt', right.caption);
-			$('#polaroid_right_caption').text(right.caption);
+		function resetPolaroids() {
+			polaroidContainer.empty();
+			polaroidContainer.removeClass('is-active');
+			polaroidIndex = 0;
+			leftPolaroidCount = 0;
+			rightPolaroidCount = 0;
+			if (polaroidIntroTimeout) {
+				clearTimeout(polaroidIntroTimeout);
+				polaroidIntroTimeout = null;
+			}
+		}
+
+		function buildPolaroid(photo, isLeft, stackPosition) {
+			var rotationBase = isLeft ? -12 : 12;
+			var rotationJitter = (Math.random() * 6) - 3;
+			var verticalOffset = Math.min(10 + stackPosition * 9, 80);
+			var horizontalOffset = 4 + Math.min(stackPosition * 1.2, 6);
+			var polaroid = $('<figure/>', {
+				'class': 'polaroid ' + (isLeft ? 'polaroid--left' : 'polaroid--right')
+			}).css({
+				top: verticalOffset + 'vh',
+				'--rotation': (rotationBase + rotationJitter) + 'deg',
+				'--offset-x': horizontalOffset + 'vw',
+				'z-index': 5 + stackPosition
+			});
+
+			polaroid.append(
+				$('<img/>', { src: photo.src, alt: photo.caption }),
+				$('<figcaption/>', { 'class': 'caption', text: photo.caption })
+			);
+
+			return polaroid;
+		}
+
+		function showNextPolaroid() {
+			if (polaroidIndex >= polaroidPhotos.length) {
+				return false;
+			}
+
+			var isLeft = polaroidIndex % 2 === 0;
+			var stackPosition = isLeft ? leftPolaroidCount : rightPolaroidCount;
+			var polaroid = buildPolaroid(polaroidPhotos[polaroidIndex], isLeft, stackPosition);
+
+			if (!polaroidContainer.hasClass('is-active')) {
+				polaroidContainer.addClass('is-active');
+			}
+
+			polaroidContainer.append(polaroid);
+
+			requestAnimationFrame(function(){
+				requestAnimationFrame(function(){
+					polaroid.addClass('is-visible');
+				});
+			});
+
+			polaroidIndex += 1;
+			if (isLeft) {
+				leftPolaroidCount += 1;
+			} else {
+				rightPolaroidCount += 1;
+			}
+
+			return true;
+		}
+
+		function startPolaroidSequence() {
+			resetPolaroids();
+			if (!polaroidPhotos.length) {
+				return;
+			}
+
+			polaroidContainer.addClass('is-active');
+
+			if (showNextPolaroid() && polaroidIndex < polaroidPhotos.length) {
+				polaroidIntroTimeout = setTimeout(function(){
+					showNextPolaroid();
+					polaroidIntroTimeout = null;
+				}, 360);
+			}
 		}
 
 		function advancePolaroids() {
-			polaroidIndex = (polaroidIndex + 2) % polaroidPhotos.length;
-			renderPolaroids();
+			showNextPolaroid();
 		}
 
-		renderPolaroids();
 		$(window).resize(function(){
 			 vw = $(window).width()/2;
 			$('#b1,#b2,#b3,#b4,#b5,#b6,#b7').stop();
@@ -70,10 +144,8 @@ $('document').ready(function(){
 	});
 
 	$('#bannar_coming').click(function(){
-		polaroidIndex = 0;
-		renderPolaroids();
+		startPolaroidSequence();
 		$('.bannar').addClass('bannar-come');
-		$('#polaroid_gallery').fadeIn('slow');
 		$('#inline_cake').hide();
 		$(this).fadeOut('slow').delay(6000).promise().done(function(){
 			$('#balloons_flying').fadeIn('slow');
