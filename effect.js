@@ -15,7 +15,7 @@ $('document').ready(function(){
 			{src: 'polaroid3.jpg', caption: 'Captured Smiles'},
 			{src: 'polaroid4.jpg', caption: 'Golden Lights'},
 			{src: 'polaroid5.jpg', caption: 'Party Vibes'},
-			{src: 'polaroid6.jpg', caption: 'Best Friends'}
+			{src: 'polaroid6.jpg', caption: 'We Are The Best'}
 		];
 
 		function resetPolaroids() {
