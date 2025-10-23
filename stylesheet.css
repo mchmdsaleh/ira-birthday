@@ -1344,8 +1344,10 @@ audio {
 	margin-top: 50px;
 }
 .message {
-	margin-top: 200px;
+	margin: clamp(40px, 12vh, 160px) auto 0;
 	display: none;
+	max-width: min(90vw, 720px);
+	text-align: center;
 }
 .message p {
 	font-family: 'Signika', sans-serif;
@@ -1355,6 +1357,8 @@ audio {
 	text-shadow: 2px 2px 2px #FFF;
 	display: none;
 	font-weight: bold;
+	text-align: inherit;
+	margin: clamp(8px, 2vh, 18px) 0;
 }
 
 /* Inline cake between polaroids */
