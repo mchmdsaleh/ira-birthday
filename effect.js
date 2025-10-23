@@ -201,7 +201,7 @@ $('document').ready(function(){
 	$('#story').click(function(){
 		advancePolaroids();
 		$(this).fadeOut('slow');
-		$('.cake').fadeOut('fast').promise().done(function(){
+		$('.cake, #inline_cake').fadeOut('fast').promise().done(function(){
 			$('.message').fadeIn('slow');
 		});
 		
@@ -212,10 +212,7 @@ $('document').ready(function(){
 			i=i+1;
 			$("p:nth-child("+i+")").fadeIn('slow').delay(1000);
 			if(i==50){
-				$("p:nth-child(49)").fadeOut('slow').promise().done(function () {
-					$('.cake').fadeIn('fast');
-				});
-				
+				$("p:nth-child(49)").fadeOut('slow');
 			}
 			else{
 				msgLoop(i);
